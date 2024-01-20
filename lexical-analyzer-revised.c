@@ -35,23 +35,21 @@ int main() {
         printf("ERROR - cannot open front.in \n");
     }
 
-    printf("Yessss");
-
     return 0;
 }
 
 /* getChar - a function to get the next character of input and determine its character class */
 void getChar(FILE *in_fp, char *nextChar, int *charClassPtr) {
     if ((*nextChar = getc(in_fp)) != EOF) { 
-        *charClassPtr = isalpha(*nextChar) ? LETTER :
-                        (isdigit(*nextChar) ? DIGIT : UNKNOWN);
+        if (isalpha(*nextChar)) 
+            *charClassPtr = LETTER;
+        else if (isdigit(*nextChar))
+            *charClassPtr = DIGIT;
+        else 
+            *charClassPtr = UNKNOWN;
 
-        // if (isalpha(*nextChar)) 
-        //     *charClassPtr = LETTER;
-        // else if (isdigit(*nextChar))
-        //     *charClassPtr = DIGIT;
-        // else 
-        //     *charClassPtr = UNKNOWN;
+        // *charClassPtr = isalpha(*nextChar) ? LETTER :
+        //                 isdigit(*nextChar) ? DIGIT : UNKNOWN;
     } else {
         *charClassPtr = EOF;
     }
@@ -59,7 +57,7 @@ void getChar(FILE *in_fp, char *nextChar, int *charClassPtr) {
 
 /* addChar - a function to add nextChar to lexeme */
 char addChar(int *lexLen, char ch, char lexeme[]) {
-    if (*lexLen <= 98) {
+    if (*lexLen <= MAX_LEXEME - 2) {
         lexeme[(*lexLen)++] = ch;
         lexeme[*lexLen] = 0;
     } else {
