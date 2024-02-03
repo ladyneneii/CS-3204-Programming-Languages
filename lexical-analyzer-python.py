@@ -93,15 +93,52 @@ def lex():
         lexeme = "EOF"
     print(f"Next token is: {nextToken}, Next lexeme is {lexeme}");
 
-    return nextToken;
-    
+
+def expr():
+    print("Enter <expr>");
+    term();
+    while (nextToken == ADD_OP or nextToken == SUB_OP):
+        lex();
+        term();
+    print("Exit <expr>");
+
+
+def term():
+    print("Enter <term>");
+    factor();
+    while (nextToken == MULT_OP or nextToken == DIV_OP):
+        lex();
+        factor();
+    print("Exit <term>");
+
+
+def factor():
+    print("Enter <factor>");
+    if (nextToken == IDENT or nextToken == INT_LIT):
+        lex();
+    else:
+        if  (nextToken == LEFT_PAREN):
+            lex();
+            expr();
+            if (nextToken == RIGHT_PAREN):
+                lex();
+            else:
+                error();
+        else:
+            error();
+    print("Exit <factor>");
+
+def error():
+    print("ERROR!!!");
+
 
 try:
     with open("front.in", 'r') as file:
         file_content = file.read()
         getChar()
-        while(lex() != EOF):
-            pass
+        while(nextToken != EOF):
+            lex()
+            expr()
 except FileNotFoundError:
     print(f"ERROR - cannot open front.in")
 except Exception as e:
